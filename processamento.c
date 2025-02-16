@@ -5,14 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-#include <sys/stat.h>
 
-void criarPasta(const char *pasta) {
-    struct stat st;
-    if (stat(pasta, &st) == -1) {
-        mkdir(pasta);
-    }
-}
 
 void processarImagens(const char *pasta_origem, const char *pasta_destino) {
     DIR *dir = opendir(pasta_origem);
@@ -21,13 +14,12 @@ void processarImagens(const char *pasta_origem, const char *pasta_destino) {
         return;
     }
 
-    criarPasta(pasta_destino);
     struct dirent *entrada;
     int imagens_processadas = 0;
 
     while ((entrada = readdir(dir)) != NULL) {
         if (strstr(entrada->d_name, ".pgm")) {
-            char caminho[256];
+            char caminho[FILENAME_MAX];
             snprintf(caminho, sizeof(caminho), "%s/%s", pasta_origem, entrada->d_name);
 
             PGM pgm = lerPGM(caminho);
