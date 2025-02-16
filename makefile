@@ -2,7 +2,7 @@
 CC = gcc
 
 # Opções de compilação
-CFLAGS = -Wall -Wextra -g3
+CFLAGS = -Wall -Wextra -g3 -O3
 
 # Lista de arquivos-fonte
 SRCS = main.c imagem.c kmeans.c processamento.c
