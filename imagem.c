@@ -1,3 +1,22 @@
+// *********************************************************
+// * Aluno:  Sofia Freitas Batista Prata                   *
+// * Matrícula: 20241045050448                             *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
+// * Aluno: Pedro Felipe Monteiro Ventura                  *
+// * Matrícula: 20241045050294                             *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
+// * Aluno: Miguel Antonio Florencio Felix                 *
+// * Matrícula: 2024104505 0480                                *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
 #include "imagem.h"  // Inclui o arquivo de cabeçalho que contém a definição da estrutura PGM e funções auxiliares.
 #include <stdio.h>    // Biblioteca padrão para entrada e saída.
 #include <stdlib.h>   // Biblioteca padrão para alocação de memória e outras funções utilitárias.
