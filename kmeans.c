@@ -1,36 +1,44 @@
-#include <stdio.h>
-#include "kmeans.h"
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
-#include "imagem.h"
+#include <stdio.h>      // Biblioteca padrão para entrada e saída de dados.
+#include "kmeans.h"     // Arquivo de cabeçalho com a definição da função k-means.
+#include <stdlib.h>     // Biblioteca para alocação de memória e funções utilitárias.
+#include <string.h>     // Biblioteca para manipulação de strings e memória.
+#include <math.h>       // Biblioteca para operações matemáticas (exemplo: abs()).
+#include <time.h>       // Biblioteca para manipulação de tempo (usada para seed do rand()).
+#include "imagem.h"     // Arquivo de cabeçalho que contém a estrutura PGM e funções relacionadas.
 
-#define MAX_ITER 100
+#define MAX_ITER 100    // Define o número máximo de iterações para o algoritmo k-means.
 
+/**
+ * Função que aplica o algoritmo k-means para clusterizar os pixels de uma imagem PGM.
+ * @param pgm Estrutura contendo a imagem a ser clusterizada.
+ * @param k Número de clusters a serem formados.
+ * @param clusters Vetor que armazenará o cluster atribuído a cada pixel.
+ */
 void kmeans(PGM *pgm, int k, int *clusters) {
-    // Alocação dinâmica de memória para centroides, soma e count
-    int *centroides = (int *)malloc(k * sizeof(int));
-    int *soma = (int *)malloc(k * sizeof(int));
-    int *count = (int *)malloc(k * sizeof(int));
+    // Alocação dinâmica de memória para os centroides e variáveis auxiliares.
+    int *centroides = (int *)malloc(k * sizeof(int)); // Vetor que armazena os centroides atuais.
+    int *soma = (int *)malloc(k * sizeof(int));       // Vetor para somar os valores dos pixels atribuídos a cada cluster.
+    int *count = (int *)malloc(k * sizeof(int));      // Vetor para contar quantos pixels pertencem a cada cluster.
 
+    // Verifica se a alocação de memória foi bem-sucedida.
     if (centroides == NULL || soma == NULL || count == NULL) {
         printf("Erro ao alocar memória.\n");
         return;
     }
     
-    srand(time(NULL));
+    srand(time(NULL)); // Inicializa o gerador de números aleatórios com base no tempo atual.
 
-    // Inicializa os centroides com valores aleatórios dos pixels da imagem
+    // Escolhe os centroides iniciais aleatoriamente a partir dos pixels da imagem.
     for (int i = 0; i < k; i++) {
         centroides[i] = pgm->imagem[rand() % (pgm->largura * pgm->altura)];
     }
     
+    // Loop principal do k-means, com no máximo MAX_ITER iterações.
     for (int iter = 0; iter < MAX_ITER; iter++) {
-        memset(soma, 0, k * sizeof(int));
-        memset(count, 0, k * sizeof(int));
+        memset(soma, 0, k * sizeof(int));   // Zera os valores do vetor soma.
+        memset(count, 0, k * sizeof(int));  // Zera os valores do vetor count.
 
-        // Armazenar os centroides antigos
+        // Aloca memória para armazenar os centroides antigos para comparação.
         int *centroides_antigos = (int *)malloc(k * sizeof(int));
         if (centroides_antigos == NULL) {
             printf("Erro ao alocar memória para centroides antigos.\n");
@@ -39,49 +47,53 @@ void kmeans(PGM *pgm, int k, int *clusters) {
             free(count);
             return;
         }
+
+        // Copia os centroides atuais para os antigos antes de atualizá-los.
         memcpy(centroides_antigos, centroides, k * sizeof(int));
 
-        // Calculando a atribuição dos clusters
+        // Etapa de atribuição: associa cada pixel ao cluster mais próximo.
         for (int i = 0; i < pgm->largura * pgm->altura; i++) {
-            int pixel = pgm->imagem[i];
-            int cluster = 0, min_dist = abs(pixel - centroides[0]);
+            int pixel = pgm->imagem[i]; // Obtém o valor do pixel atual.
+            int cluster = 0;            // Índice do cluster mais próximo.
+            int min_dist = abs(pixel - centroides[0]); // Calcula a distância ao primeiro centroide.
 
+            // Percorre os k clusters para encontrar o centroide mais próximo.
             for (int c = 1; c < k; c++) {
-                int dist = abs(pixel - centroides[c]);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    cluster = c;
+                int dist = abs(pixel - centroides[c]); // Calcula a distância do pixel ao centroide c.
+                if (dist < min_dist) {  // Se a distância for menor que a mínima encontrada até agora:
+                    min_dist = dist;    // Atualiza a menor distância.
+                    cluster = c;        // Atualiza o índice do cluster correspondente.
                 }
             }
-            clusters[i] = cluster;
-            soma[cluster] += pixel;
-            count[cluster]++;
+            clusters[i] = cluster; // Atribui o cluster ao pixel atual.
+            soma[cluster] += pixel; // Acumula o valor do pixel no somatório do cluster correspondente.
+            count[cluster]++;       // Incrementa a contagem de pixels no cluster correspondente.
         }
 
-        // Atualizando os centroides
+        // Etapa de atualização: recalcula os centroides com base na média dos pixels atribuídos.
         for (int c = 0; c < k; c++) {
+            // Se houver pixels no cluster, recalcula o centroide como a média dos pixels atribuídos a ele.
             centroides[c] = count[c] ? soma[c] / count[c] : centroides[c];
         }
 
-        // Verificar se os centroides mudaram. Se não, quebrar o loop.
+        // Verificação de convergência: se os centroides não mudaram, finaliza o loop.
         int centroides_iguais = 1;
         for (int c = 0; c < k; c++) {
-            if (centroides[c] != centroides_antigos[c]) {
-                centroides_iguais = 0;
+            if (centroides[c] != centroides_antigos[c]) { // Se ao menos um centroide mudou:
+                centroides_iguais = 0; // Indica que ainda não convergiu.
                 break;
             }
         }
 
-        // Se os centroides não mudaram, sai do loop
+        free(centroides_antigos); // Libera a memória dos centroides antigos.
+
+        // Se os centroides permaneceram inalterados, o algoritmo convergiu e podemos sair do loop.
         if (centroides_iguais) {
             break;
         }
-
-        // Libere a memória dos centroides antigos
-        free(centroides_antigos);
     }
 
-    // Libere a memória das variáveis alocadas dinamicamente
+    // Libera a memória das variáveis alocadas dinamicamente.
     free(centroides);
     free(soma);
     free(count);
