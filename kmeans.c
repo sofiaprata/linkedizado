@@ -8,10 +8,6 @@
 #define MAX_ITER 100
 
 void kmeans(PGM *pgm, int k, int *clusters) {
-
-    malloc
-
-
     int centroides[k];
     int soma[k], count[k];
     
