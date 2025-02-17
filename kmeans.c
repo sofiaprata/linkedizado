@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "kmeans.h"
 #include <stdlib.h>
 #include <string.h>
@@ -8,11 +9,18 @@
 #define MAX_ITER 100
 
 void kmeans(PGM *pgm, int k, int *clusters) {
-    int centroides[k];
-    int soma[k], count[k];
+    // Alocação dinâmica de memória para centroides, soma e count
+    int *centroides = (int *)malloc(k * sizeof(int));
+    int *soma = (int *)malloc(k * sizeof(int));
+    int *count = (int *)malloc(k * sizeof(int));
+
+    if (centroides == NULL || soma == NULL || count == NULL) {
+        printf("Erro ao alocar memória.\n");
+        return;
+    }
     
     srand(time(NULL));
-    
+
     // Inicializa os centroides com valores aleatórios dos pixels da imagem
     for (int i = 0; i < k; i++) {
         centroides[i] = pgm->imagem[rand() % (pgm->largura * pgm->altura)];
@@ -23,7 +31,14 @@ void kmeans(PGM *pgm, int k, int *clusters) {
         memset(count, 0, k * sizeof(int));
 
         // Armazenar os centroides antigos
-        int centroides_antigos[k];
+        int *centroides_antigos = (int *)malloc(k * sizeof(int));
+        if (centroides_antigos == NULL) {
+            printf("Erro ao alocar memória para centroides antigos.\n");
+            free(centroides);
+            free(soma);
+            free(count);
+            return;
+        }
         memcpy(centroides_antigos, centroides, k * sizeof(int));
 
         // Calculando a atribuição dos clusters
@@ -61,5 +76,13 @@ void kmeans(PGM *pgm, int k, int *clusters) {
         if (centroides_iguais) {
             break;
         }
+
+        // Libere a memória dos centroides antigos
+        free(centroides_antigos);
     }
+
+    // Libere a memória das variáveis alocadas dinamicamente
+    free(centroides);
+    free(soma);
+    free(count);
 }
