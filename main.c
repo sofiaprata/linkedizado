@@ -1,24 +1,23 @@
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ /
-//∗ Aluno : Joao de Souza ∗/
-//∗ M a t ri c ul a : 12345 ∗/
-//∗ A v ali a c a o 0 4: Trabalho Fi n al ∗/
-//∗ 0 4. 5 0 5. 2 3 − 2 0 2 4. 2 − P r o f . D a ni el F e r r e i r a ∗/
-//∗ Compilador : . . . ( DevC++ ou gcc ) v e r s a o . . . ∗/
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ 
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ /
-//∗ Aluno : Joao de Souza ∗/
-//∗ M a t ri c ul a : 12345 ∗/
-//∗ A v ali a c a o 0 4: Trabalho Fi n al ∗/
-//∗ 0 4. 5 0 5. 2 3 − 2 0 2 4. 2 − P r o f . D a ni el F e r r e i r a ∗/
-//∗ Compilador : . . . ( DevC++ ou gcc ) v e r s a o . . . ∗/
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ 
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ /
-//∗ Aluno : Joao de Souza ∗/
-//∗ M a t ri c ul a : 12345 ∗/
-//∗ A v ali a c a o 0 4: Trabalho Fi n al ∗/
-//∗ 0 4. 5 0 5. 2 3 − 2 0 2 4. 2 − P r o f . D a ni el F e r r e i r a ∗/
-//∗ Compilador : . . . ( DevC++ ou gcc ) v e r s a o . . . ∗/
-//∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗∗ 
+// *********************************************************
+// * Aluno:  Sofia Freitas Batista Prata                   *
+// * Matrícula: 20241045050448                             *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
+// * Aluno: Pedro Felipe Monteiro Ventura                  *
+// * Matrícula: 20241045050294                             *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
+// * Aluno: Miguel Antonio Florencio Felix                 *
+// * Matrícula: 2024104505 0480                                *
+// * Avaliação 04: Trabalho Final                          *
+// * 04.505.23 - 2024.2 - Prof. Daniel Ferreira            *
+// * Compilador: gcc (MinGW.org GCC-6.3.0-1) 6.3.0         *
+// *********************************************************
+ 
 #include <stdio.h>
 #include <time.h>
 #include "processamento.h"
