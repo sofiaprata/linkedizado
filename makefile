@@ -35,4 +35,3 @@ all: $(OUT)
 # Regra para compilar o executável
 $(OUT): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(OUT)
-
