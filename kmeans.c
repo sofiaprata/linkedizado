@@ -30,24 +30,33 @@
 
 void calcularHistograma(PGM *pgm, int *histograma) {
     memset(histograma, 0, NIVEIS_CINZA * sizeof(int));
-
     for (int i = 0; i < pgm->largura * pgm->altura; i++) {
         histograma[pgm->imagem[i]]++;
     }
 }
 
-void escolherCentroides(int *centroides, int k, int *histograma) {
-    int indicesEscolhidos = 0;
-    for (int i = 0; i < NIVEIS_CINZA && indicesEscolhidos < k; i++) {
+// Inicializa centroides de forma distribuída ao longo do histograma
+void inicializarCentroides(int *centroides, int k, int *histograma) {
+    int valores[NIVEIS_CINZA], n = 0;
+
+    // Coletando valores únicos presentes na imagem
+    for (int i = 0; i < NIVEIS_CINZA; i++) {
         if (histograma[i] > 0) {
-            centroides[indicesEscolhidos++] = i;
+            valores[n++] = i;
         }
     }
 
-    // Se não conseguiu preencher k centroides, preenche aleatoriamente
-    srand(time(NULL));
-    while (indicesEscolhidos < k) {
-        centroides[indicesEscolhidos++] = rand() % NIVEIS_CINZA;
+    if (n < k) {
+        fprintf(stderr, "Aviso: Menos tons distintos do que k. Ajustando...\n");
+        for (int i = 0; i < k; i++) {
+            centroides[i] = valores[i % n];
+        }
+        return;
+    }
+
+    // Distribuir centroides uniformemente
+    for (int i = 0; i < k; i++) {
+        centroides[i] = valores[(n * i) / k];
     }
 }
 
@@ -56,36 +65,27 @@ void kmeans(PGM *pgm, int k, int *clusters) {
     int *soma = (int *)malloc(k * sizeof(int));
     int *count = (int *)malloc(k * sizeof(int));
 
-    if (centroides == NULL || soma == NULL || count == NULL) {
-        printf("Erro ao alocar memória.\n");
+    if (!centroides || !soma || !count) {
+        fprintf(stderr, "Erro ao alocar memória.\n");
         return;
     }
-    
-    // Calcula histograma antes de iniciar o k-means
+
     int histograma[NIVEIS_CINZA];
     calcularHistograma(pgm, histograma);
+    inicializarCentroides(centroides, k, histograma);
 
-    // Inicializa os centroides com os valores mais frequentes do histograma
-    escolherCentroides(centroides, k, histograma);
-    
     for (int iter = 0; iter < MAX_ITER; iter++) {
         memset(soma, 0, k * sizeof(int));
         memset(count, 0, k * sizeof(int));
 
-        int *centroides_antigos = (int *)malloc(k * sizeof(int));
-        if (centroides_antigos == NULL) {
-            printf("Erro ao alocar memória para centroides antigos.\n");
-            free(centroides);
-            free(soma);
-            free(count);
-            return;
-        }
+        int centroides_antigos[k];
         memcpy(centroides_antigos, centroides, k * sizeof(int));
 
-        // Atribui os pixels a clusters
+        // Atribui cada pixel ao cluster mais próximo
         for (int i = 0; i < pgm->largura * pgm->altura; i++) {
             int pixel = pgm->imagem[i];
-            int cluster = 0, min_dist = abs(pixel - centroides[0]);
+            int cluster = 0;
+            int min_dist = abs(pixel - centroides[0]);
 
             for (int c = 1; c < k; c++) {
                 int dist = abs(pixel - centroides[c]);
@@ -94,31 +94,34 @@ void kmeans(PGM *pgm, int k, int *clusters) {
                     cluster = c;
                 }
             }
+
             clusters[i] = cluster;
             soma[cluster] += pixel;
             count[cluster]++;
         }
 
-        // Atualiza os centroides
+        // Atualiza os centroides com média aritmética exata
         for (int c = 0; c < k; c++) {
-            centroides[c] = count[c] ? soma[c] / count[c] : centroides[c];
+            if (count[c] > 0) {
+                centroides[c] = soma[c] / count[c];
+            }
         }
 
         // Verifica se os centroides mudaram
-        int centroides_iguais = 1;
+        int convergiu = 1;
         for (int c = 0; c < k; c++) {
             if (centroides[c] != centroides_antigos[c]) {
-                centroides_iguais = 0;
+                convergiu = 0;
                 break;
             }
         }
 
-        if (centroides_iguais) {
-            free(centroides_antigos);
-            break;
-        }
+        if (convergiu) break;
+    }
 
-        free(centroides_antigos);
+    // Atualiza os pixels para os valores exatos dos centroides
+    for (int i = 0; i < pgm->largura * pgm->altura; i++) {
+        pgm->imagem[i] = centroides[clusters[i]];
     }
 
     free(centroides);
