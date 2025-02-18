@@ -27,7 +27,7 @@ int main() {
 
     // Caminho genérico, ajustado para ser mais portátil
     const char *inputPath = "dataset"; // Diretório relativo
-    const char *outputPath = "out"; // Diretório relativo de saída
+    const char *outputPath = "teste"; // Diretório relativo de saída
 
     // Processar imagens
     processarImagens(inputPath, outputPath);

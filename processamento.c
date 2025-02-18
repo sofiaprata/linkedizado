@@ -20,6 +20,19 @@
 /**
  * Função para imprimir o histograma da imagem.
  */
+#include "processamento.h"
+#include "imagem.h"
+#include "kmeans.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+#define NIVEIS_CINZA 256
+
+/**
+ * Função para imprimir o histograma da imagem.
+ */
 void imprimirHistograma(int *histograma, const char *const caminho) {
   printf("Histograma da imagem %s: \n", caminho);
   for (int i = 0; i < NIVEIS_CINZA;i++) {
